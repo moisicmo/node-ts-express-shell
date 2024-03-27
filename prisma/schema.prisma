@@ -21,7 +21,7 @@ model Permissions {
   moduke              String              @db.VarChar(255)
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
-  rolePermission      RolePermissions?
+  roles               Roles[]
 }
 
 model Roles {
@@ -30,16 +30,10 @@ model Roles {
   state               Boolean             @default(false)
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
-  rolePermission      RolePermissions?
+  permissions         Permissions[]
   staffs              Staffs?
 }
 
-model RolePermissions {
-  permissionId        Int                 @unique
-  roleId              Int                 @unique
-  permission          Permissions         @relation(fields: [permissionId], references: [id])
-  role                Roles               @relation(fields: [roleId], references: [id])
-}
 
 model Users {
   id                  Int                 @id @default(autoincrement())
@@ -77,7 +71,7 @@ model Students {
   updatedAt           DateTime            @updatedAt
   user                Users               @relation(fields: [userId], references: [id])
   inscriptions        Inscriptions?
-  projectStudents     ProjectStudents?
+  projects            Projects[]
 }
 
 model Teachers {
@@ -126,8 +120,8 @@ model Stages {
   state               Boolean             @default(true)
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
-  stageRequirements   StageRequirements?
-  seasonStages        SeasonStages?
+  requirements        Requirements[]
+  seasons             Seasons[]
 }
 
 model Requirements {
@@ -137,14 +131,7 @@ model Requirements {
   state               Boolean             @default(true)
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
-  stageRequirements   StageRequirements?
-}
-
-model StageRequirements {
-  stageId             Int                 @unique
-  requirementId       Int                 @unique
-  stage               Stages              @relation(fields: [stageId], references: [id])
-  requirement         Requirements        @relation(fields: [requirementId], references: [id])
+  stages              Stages[]
 }
 
 model TypeProjects {
@@ -174,16 +161,9 @@ model Seasons {
   state               Boolean             @default(true)
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
-  seasonStages        SeasonStages?
+  stages              Stages[]
   inscriptions        Inscriptions?
   projects            Projects?
-}
-
-model SeasonStages {
-  stageId             Int                 @unique
-  seasonId            Int                 @unique
-  stage               Stages              @relation(fields: [stageId], references: [id])
-  season              Seasons             @relation(fields: [seasonId], references: [id])
 }
 
 model Inscriptions {
@@ -216,15 +196,8 @@ model Projects {
   category            Categories          @relation(fields: [categoryId], references: [id])
   typeProject         TypeProjects        @relation(fields: [typeProjectId], references: [id])
   season              Seasons             @relation(fields: [seasonId], references: [id])
-  projectStudents     ProjectStudents?
+  students            Students[]
   projectHistories    ProjectHistories?
-}
-
-model ProjectStudents {
-  projectId            Int                @unique
-  studentId            Int                @unique
-  project              Projects           @relation(fields: [projectId], references: [id])
-  student              Students           @relation(fields: [studentId], references: [id])
 }
 
 model ProjectHistories {
