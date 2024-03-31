@@ -7,6 +7,8 @@ import { SubjectRoutes } from './subject/routes';
 import { RequirementRoutes } from './requirement/routes';
 import { CategoryRoutes } from './category/routes';
 import { TypeProjectRoutes } from './typeProject/routes';
+import { StageRoutes } from './stage/routes';
+import { SeasonRoutes } from './season/routes';
 
 export class AppRoutes {
 
@@ -23,6 +25,8 @@ export class AppRoutes {
     router.use('/api/requirement', RequirementRoutes.routes);
     router.use('/api/category', CategoryRoutes.routes);
     router.use('/api/typeProject', TypeProjectRoutes.routes);
+    router.use('/api/stage', StageRoutes.routes);
+    router.use('/api/season', SeasonRoutes.routes);
 
     return router;
   }

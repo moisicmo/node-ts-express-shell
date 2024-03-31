@@ -165,7 +165,7 @@ CREATE TABLE "Seasons" (
 CREATE TABLE "Inscriptions" (
     "id" SERIAL NOT NULL,
     "studentId" INTEGER NOT NULL,
-    "userId" INTEGER NOT NULL,
+    "staffId" INTEGER NOT NULL,
     "seasonId" INTEGER NOT NULL,
     "total" INTEGER NOT NULL,
     "amountDelivered" INTEGER NOT NULL,
@@ -259,7 +259,7 @@ CREATE UNIQUE INDEX "Parallels_subjectId_key" ON "Parallels"("subjectId");
 CREATE UNIQUE INDEX "Inscriptions_studentId_key" ON "Inscriptions"("studentId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Inscriptions_userId_key" ON "Inscriptions"("userId");
+CREATE UNIQUE INDEX "Inscriptions_staffId_key" ON "Inscriptions"("staffId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Inscriptions_seasonId_key" ON "Inscriptions"("seasonId");
@@ -334,7 +334,7 @@ ALTER TABLE "Parallels" ADD CONSTRAINT "Parallels_subjectId_fkey" FOREIGN KEY ("
 ALTER TABLE "Inscriptions" ADD CONSTRAINT "Inscriptions_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Students"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Inscriptions" ADD CONSTRAINT "Inscriptions_userId_fkey" FOREIGN KEY ("userId") REFERENCES "Users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Inscriptions" ADD CONSTRAINT "Inscriptions_staffId_fkey" FOREIGN KEY ("staffId") REFERENCES "Staffs"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Inscriptions" ADD CONSTRAINT "Inscriptions_seasonId_fkey" FOREIGN KEY ("seasonId") REFERENCES "Seasons"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

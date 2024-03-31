@@ -6,3 +6,5 @@ export * from './subject.service';
 export * from './typeProject.service';
 export * from './category.service';
 export * from './requirement.service';
+export * from './stage.service';
+export * from './season.service';

@@ -49,7 +49,6 @@ model Users {
   staffs              Staffs?
   students            Students?
   teachers            Teachers?
-  inscriptions        Inscriptions?
 }
 
 model Staffs {
@@ -62,6 +61,7 @@ model Staffs {
   updatedAt           DateTime            @updatedAt
   user                Users               @relation(fields: [userId], references: [id])
   role                Roles               @relation(fields: [roleId], references: [id])
+  inscriptions        Inscriptions?
 }
 
 model Students {
@@ -171,7 +171,7 @@ model Seasons {
 model Inscriptions {
   id                  Int                 @id @default(autoincrement())
   studentId           Int                 @unique
-  userId              Int                 @unique
+  staffId              Int                 @unique
   seasonId            Int                 @unique
   total               Int                 @db.Integer
   amountDelivered     Int                 @db.Integer
@@ -181,7 +181,7 @@ model Inscriptions {
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
   student             Students            @relation(fields: [studentId], references: [id])
-  user                Users               @relation(fields: [userId], references: [id])
+  staff               Staffs              @relation(fields: [staffId], references: [id])
   season              Seasons             @relation(fields: [seasonId], references: [id])
 }
 
