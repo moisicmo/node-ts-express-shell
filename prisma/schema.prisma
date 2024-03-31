@@ -18,7 +18,7 @@ datasource db {
 model Permissions {
   id                  Int                 @id @default(autoincrement())
   name                String              @db.VarChar(255)
-  moduke              String              @db.VarChar(255)
+  module              String              @db.VarChar(255)
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
   roles               Roles[]
@@ -27,7 +27,7 @@ model Permissions {
 model Roles {
   id                  Int                 @id @default(autoincrement())
   name                String              @db.VarChar(255)
-  state               Boolean             @default(false)
+  state               Boolean             @default(true)
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
   permissions         Permissions[]
@@ -40,6 +40,8 @@ model Users {
   name                String              @db.VarChar(255)
   lastName            String              @db.VarChar(255)
   email               String              @unique
+  emailValidated      Boolean             @default(false)
+  image               String?             @db.VarChar(255)
   phone               String              @unique
   password            String              @db.VarChar(255)
   createdAt           DateTime            @default(now())

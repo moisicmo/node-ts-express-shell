@@ -1,49 +1,60 @@
-// import { PrismaClient } from '@prisma/client'
-// const prisma = new PrismaClient()
-// async function main() {
-//   const alice = await prisma.user.upsert({
-//     where: { email: 'alice@prisma.io' },
-//     update: {},
-//     create: {
-//       name: 'Alice',
-//       lastName: 'sad',
-//       posts: {
-//         create: {
-//           title: 'Check out Prisma with Next.js',
-//           content: 'https://www.prisma.io/nextjs',
-//           published: true,
-//         },
-//       },
-//     },
-//   })
-//   const bob = await prisma.user.upsert({
-//     update: {},
-//     create: {
-//       name: 'Bob',
-//       posts: {
-//         create: [
-//           {
-//             title: 'Follow Prisma on Twitter',
-//             content: 'https://twitter.com/prisma',
-//             published: true,
-//           },
-//           {
-//             title: 'Follow Nexus on Twitter',
-//             content: 'https://twitter.com/nexusgql',
-//             published: true,
-//           },
-//         ],
-//       },
-//     },
-//   })
-//   console.log({ alice, bob })
-// }
-// main()
-//   .then(async () => {
-//     await prisma.$disconnect()
-//   })
-//   .catch(async (e) => {
-//     console.error(e)
-//     await prisma.$disconnect()
-//     process.exit(1)
-//   })
+import { PrismaClient } from '@prisma/client';
+import { bcryptAdapter } from '../src/config';
+
+
+async function main() {
+  const prisma = new PrismaClient();
+
+  try {
+
+    const user = await prisma.users.upsert({
+      where: { email: 'moisic.mo@gmail.com' },
+      update: {},
+      create: {
+        name: 'Moises',
+        lastName: 'Ochoa',
+        email: 'moisic.mo@gmail.com',
+        phone: '59173735766',
+        password: bcryptAdapter.hash('8312915'),
+      },
+    });
+
+    const role = await prisma.roles.upsert({
+      where: { id: 1 },
+      update: {},
+      create: {
+        name: 'administrador',
+        permissions: {
+          create: [
+            {
+              name: 'crear',
+              module: 'crear'
+            },
+            {
+              name: 'editar',
+              module: 'editar'
+            }
+          ]
+        }
+      }
+    });
+
+    const staff = await prisma.staffs.upsert({
+      where: { userId: user.id, roleId: role.id },
+      update: {},
+      create: {
+        userId: user.id,
+        roleId: role.id,
+        superStaff: true
+      },
+    });
+
+    console.log('Datos de semilla insertados correctamente.');
+  } catch (error) {
+    console.error('Error al insertar datos de semilla:', error);
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+main();

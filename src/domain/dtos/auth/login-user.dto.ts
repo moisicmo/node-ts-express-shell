@@ -10,10 +10,10 @@ export class LoginUserDto {
   static create( object: { [key:string]:any } ): [string?, LoginUserDto?] {
     const { email, password } = object;
 
-    if ( !email ) return ['Missing email'];
-    if ( !regularExps.email.test( email ) ) return ['Email is not valid'];
-    if ( !password ) return ['Missing password'];
-    if ( password.length < 6 ) return ['Password too short'];
+    if ( !email ) return ['El email es obligatorio'];
+    if ( !regularExps.email.test( email ) ) return ['el correo no es valido'];
+    if ( !password ) return ['El password es obligatorio'];
+    if ( password.length < 6 ) return ['La contraseña debe de ser más de 5 caracteres'];
 
     return [undefined, new LoginUserDto(email, password)];
 

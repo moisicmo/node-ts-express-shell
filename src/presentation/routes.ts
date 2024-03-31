@@ -1,13 +1,12 @@
 import { Router } from 'express';
 
 import { Authroutes } from './auth/routes';
-// import { CategoryRoutes } from './category/routes';
-// import { ProductRoutes } from './products/routes';
-// import { FileUploadRoutes } from './file-upload/routes';
-// import { ImageRoutes } from './images/routes';
-
-
-
+import { PermissionRoutes } from './permission/routes';
+import { RoleRoutes } from './role/routes';
+import { SubjectRoutes } from './subject/routes';
+import { RequirementRoutes } from './requirement/routes';
+import { CategoryRoutes } from './category/routes';
+import { TypeProjectRoutes } from './typeProject/routes';
 
 export class AppRoutes {
 
@@ -15,18 +14,16 @@ export class AppRoutes {
   static get routes(): Router {
 
     const router = Router();
-    
-    // Definir las rutas
-    router.use('/api/auth', Authroutes.routes );
-    // router.use('/api/categories', CategoryRoutes.routes );
-    // router.use('/api/products', ProductRoutes.routes );
-    // router.use('/api/upload', FileUploadRoutes.routes );
-    // router.use('/api/images', ImageRoutes.routes );
-    
 
+    // Definir las rutas
+    router.use('/api/auth', Authroutes.routes);
+    router.use('/api/permission', PermissionRoutes.routes);
+    router.use('/api/role', RoleRoutes.routes);
+    router.use('/api/subject', SubjectRoutes.routes);
+    router.use('/api/requirement', RequirementRoutes.routes);
+    router.use('/api/category', CategoryRoutes.routes);
+    router.use('/api/typeProject', TypeProjectRoutes.routes);
 
     return router;
   }
-
-
 }

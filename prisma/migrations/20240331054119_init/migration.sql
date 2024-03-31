@@ -1,12 +1,65 @@
-/*
-  Warnings:
+-- CreateTable
+CREATE TABLE "Permissions" (
+    "id" SERIAL NOT NULL,
+    "name" VARCHAR(255) NOT NULL,
+    "module" VARCHAR(255) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
-  - A unique constraint covering the columns `[code]` on the table `Students` will be added. If there are existing duplicate values, this will fail.
-  - Added the required column `code` to the `Students` table without a default value. This is not possible if the table is not empty.
+    CONSTRAINT "Permissions_pkey" PRIMARY KEY ("id")
+);
 
-*/
--- AlterTable
-ALTER TABLE "Students" ADD COLUMN     "code" TEXT NOT NULL;
+-- CreateTable
+CREATE TABLE "Roles" (
+    "id" SERIAL NOT NULL,
+    "name" VARCHAR(255) NOT NULL,
+    "state" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Roles_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Users" (
+    "id" SERIAL NOT NULL,
+    "name" VARCHAR(255) NOT NULL,
+    "lastName" VARCHAR(255) NOT NULL,
+    "email" TEXT NOT NULL,
+    "emailValidated" BOOLEAN NOT NULL DEFAULT false,
+    "image" VARCHAR(255),
+    "phone" TEXT NOT NULL,
+    "password" VARCHAR(255) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Users_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Staffs" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "roleId" INTEGER NOT NULL,
+    "state" BOOLEAN NOT NULL DEFAULT true,
+    "superStaff" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Staffs_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Students" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "code" TEXT NOT NULL,
+    "state" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Students_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "Teachers" (
@@ -73,12 +126,6 @@ CREATE TABLE "Requirements" (
 );
 
 -- CreateTable
-CREATE TABLE "StageRequirements" (
-    "stageId" INTEGER NOT NULL,
-    "requirementId" INTEGER NOT NULL
-);
-
--- CreateTable
 CREATE TABLE "TypeProjects" (
     "id" SERIAL NOT NULL,
     "name" VARCHAR(255) NOT NULL,
@@ -115,12 +162,6 @@ CREATE TABLE "Seasons" (
 );
 
 -- CreateTable
-CREATE TABLE "SeasonStages" (
-    "stageId" INTEGER NOT NULL,
-    "seasonId" INTEGER NOT NULL
-);
-
--- CreateTable
 CREATE TABLE "Inscriptions" (
     "id" SERIAL NOT NULL,
     "studentId" INTEGER NOT NULL,
@@ -153,18 +194,54 @@ CREATE TABLE "Projects" (
 );
 
 -- CreateTable
-CREATE TABLE "ProjectStudents" (
-    "projectId" INTEGER NOT NULL,
-    "studentId" INTEGER NOT NULL
-);
-
--- CreateTable
 CREATE TABLE "ProjectHistories" (
     "parallelId" INTEGER NOT NULL,
     "projectId" INTEGER NOT NULL,
     "subjectId" INTEGER NOT NULL,
     "teacherId" INTEGER NOT NULL
 );
+
+-- CreateTable
+CREATE TABLE "_PermissionsToRoles" (
+    "A" INTEGER NOT NULL,
+    "B" INTEGER NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "_RequirementsToStages" (
+    "A" INTEGER NOT NULL,
+    "B" INTEGER NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "_SeasonsToStages" (
+    "A" INTEGER NOT NULL,
+    "B" INTEGER NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "_ProjectsToStudents" (
+    "A" INTEGER NOT NULL,
+    "B" INTEGER NOT NULL
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Users_email_key" ON "Users"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Users_phone_key" ON "Users"("phone");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Staffs_userId_key" ON "Staffs"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Staffs_roleId_key" ON "Staffs"("roleId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Students_userId_key" ON "Students"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Students_code_key" ON "Students"("code");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Teachers_userId_key" ON "Teachers"("userId");
@@ -177,18 +254,6 @@ CREATE UNIQUE INDEX "Parallels_teacherId_key" ON "Parallels"("teacherId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Parallels_subjectId_key" ON "Parallels"("subjectId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "StageRequirements_stageId_key" ON "StageRequirements"("stageId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "StageRequirements_requirementId_key" ON "StageRequirements"("requirementId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "SeasonStages_stageId_key" ON "SeasonStages"("stageId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "SeasonStages_seasonId_key" ON "SeasonStages"("seasonId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Inscriptions_studentId_key" ON "Inscriptions"("studentId");
@@ -212,12 +277,6 @@ CREATE UNIQUE INDEX "Projects_seasonId_key" ON "Projects"("seasonId");
 CREATE UNIQUE INDEX "Projects_code_key" ON "Projects"("code");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "ProjectStudents_projectId_key" ON "ProjectStudents"("projectId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "ProjectStudents_studentId_key" ON "ProjectStudents"("studentId");
-
--- CreateIndex
 CREATE UNIQUE INDEX "ProjectHistories_parallelId_key" ON "ProjectHistories"("parallelId");
 
 -- CreateIndex
@@ -230,7 +289,37 @@ CREATE UNIQUE INDEX "ProjectHistories_subjectId_key" ON "ProjectHistories"("subj
 CREATE UNIQUE INDEX "ProjectHistories_teacherId_key" ON "ProjectHistories"("teacherId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Students_code_key" ON "Students"("code");
+CREATE UNIQUE INDEX "_PermissionsToRoles_AB_unique" ON "_PermissionsToRoles"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_PermissionsToRoles_B_index" ON "_PermissionsToRoles"("B");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_RequirementsToStages_AB_unique" ON "_RequirementsToStages"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_RequirementsToStages_B_index" ON "_RequirementsToStages"("B");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_SeasonsToStages_AB_unique" ON "_SeasonsToStages"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_SeasonsToStages_B_index" ON "_SeasonsToStages"("B");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_ProjectsToStudents_AB_unique" ON "_ProjectsToStudents"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_ProjectsToStudents_B_index" ON "_ProjectsToStudents"("B");
+
+-- AddForeignKey
+ALTER TABLE "Staffs" ADD CONSTRAINT "Staffs_userId_fkey" FOREIGN KEY ("userId") REFERENCES "Users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Staffs" ADD CONSTRAINT "Staffs_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "Roles"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Students" ADD CONSTRAINT "Students_userId_fkey" FOREIGN KEY ("userId") REFERENCES "Users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Teachers" ADD CONSTRAINT "Teachers_userId_fkey" FOREIGN KEY ("userId") REFERENCES "Users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -240,18 +329,6 @@ ALTER TABLE "Parallels" ADD CONSTRAINT "Parallels_teacherId_fkey" FOREIGN KEY ("
 
 -- AddForeignKey
 ALTER TABLE "Parallels" ADD CONSTRAINT "Parallels_subjectId_fkey" FOREIGN KEY ("subjectId") REFERENCES "Subjects"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "StageRequirements" ADD CONSTRAINT "StageRequirements_stageId_fkey" FOREIGN KEY ("stageId") REFERENCES "Stages"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "StageRequirements" ADD CONSTRAINT "StageRequirements_requirementId_fkey" FOREIGN KEY ("requirementId") REFERENCES "Requirements"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "SeasonStages" ADD CONSTRAINT "SeasonStages_stageId_fkey" FOREIGN KEY ("stageId") REFERENCES "Stages"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "SeasonStages" ADD CONSTRAINT "SeasonStages_seasonId_fkey" FOREIGN KEY ("seasonId") REFERENCES "Seasons"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Inscriptions" ADD CONSTRAINT "Inscriptions_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Students"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -272,12 +349,6 @@ ALTER TABLE "Projects" ADD CONSTRAINT "Projects_typeProjectId_fkey" FOREIGN KEY 
 ALTER TABLE "Projects" ADD CONSTRAINT "Projects_seasonId_fkey" FOREIGN KEY ("seasonId") REFERENCES "Seasons"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ProjectStudents" ADD CONSTRAINT "ProjectStudents_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Projects"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "ProjectStudents" ADD CONSTRAINT "ProjectStudents_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Students"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "ProjectHistories" ADD CONSTRAINT "ProjectHistories_parallelId_fkey" FOREIGN KEY ("parallelId") REFERENCES "Parallels"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -288,3 +359,27 @@ ALTER TABLE "ProjectHistories" ADD CONSTRAINT "ProjectHistories_subjectId_fkey" 
 
 -- AddForeignKey
 ALTER TABLE "ProjectHistories" ADD CONSTRAINT "ProjectHistories_teacherId_fkey" FOREIGN KEY ("teacherId") REFERENCES "Teachers"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_PermissionsToRoles" ADD CONSTRAINT "_PermissionsToRoles_A_fkey" FOREIGN KEY ("A") REFERENCES "Permissions"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_PermissionsToRoles" ADD CONSTRAINT "_PermissionsToRoles_B_fkey" FOREIGN KEY ("B") REFERENCES "Roles"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_RequirementsToStages" ADD CONSTRAINT "_RequirementsToStages_A_fkey" FOREIGN KEY ("A") REFERENCES "Requirements"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_RequirementsToStages" ADD CONSTRAINT "_RequirementsToStages_B_fkey" FOREIGN KEY ("B") REFERENCES "Stages"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_SeasonsToStages" ADD CONSTRAINT "_SeasonsToStages_A_fkey" FOREIGN KEY ("A") REFERENCES "Seasons"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_SeasonsToStages" ADD CONSTRAINT "_SeasonsToStages_B_fkey" FOREIGN KEY ("B") REFERENCES "Stages"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_ProjectsToStudents" ADD CONSTRAINT "_ProjectsToStudents_A_fkey" FOREIGN KEY ("A") REFERENCES "Projects"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_ProjectsToStudents" ADD CONSTRAINT "_ProjectsToStudents_B_fkey" FOREIGN KEY ("B") REFERENCES "Students"("id") ON DELETE CASCADE ON UPDATE CASCADE;
