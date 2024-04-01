@@ -72,7 +72,7 @@ export class AuthService {
     const isMatching = bcryptAdapter.compare(loginUserDto.password, user.password);
     if (!isMatching) throw CustomError.badRequest('La Contraseña no es valida');
 
-    const { password, ...userEntity } = UserEntity.fromObject(user);
+    const { emailValidated,password, ...userEntity } = UserEntity.fromObjectAuth(user);
 
     const token = await JwtAdapter.generateToken({ id: user.id });
     if (!token) throw CustomError.internalServer('Error al crear la llave');

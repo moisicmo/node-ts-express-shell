@@ -9,6 +9,9 @@ import { CategoryRoutes } from './category/routes';
 import { TypeProjectRoutes } from './typeProject/routes';
 import { StageRoutes } from './stage/routes';
 import { SeasonRoutes } from './season/routes';
+import { StaffRoutes } from './staff/routes';
+import { StudentRoutes } from './student/routes';
+import { TeacherRoutes } from './teacher/routes';
 
 export class AppRoutes {
 
@@ -27,6 +30,9 @@ export class AppRoutes {
     router.use('/api/typeProject', TypeProjectRoutes.routes);
     router.use('/api/stage', StageRoutes.routes);
     router.use('/api/season', SeasonRoutes.routes);
+    router.use('/api/staff', StaffRoutes.routes);
+    router.use('/api/student', StudentRoutes.routes);
+    router.use('/api/teacher', TeacherRoutes.routes);
 
     return router;
   }

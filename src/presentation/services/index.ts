@@ -8,3 +8,6 @@ export * from './category.service';
 export * from './requirement.service';
 export * from './stage.service';
 export * from './season.service';
+export * from './staff.service';
+export * from './student.service';
+export * from './teacher.service';

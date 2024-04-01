@@ -31,7 +31,7 @@ model Roles {
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
   permissions         Permissions[]
-  staffs              Staffs?
+  staff               Staffs[]
 }
 
 
@@ -42,7 +42,7 @@ model Users {
   email               String              @unique
   emailValidated      Boolean             @default(false)
   image               String?             @db.VarChar(255)
-  phone               String              @unique
+  phone               String              @db.VarChar(255)
   password            String              @db.VarChar(255)
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
@@ -54,7 +54,7 @@ model Users {
 model Staffs {
   id                  Int                 @id @default(autoincrement())
   userId              Int                 @unique
-  roleId              Int                 @unique
+  roleId              Int                 @db.Integer
   state               Boolean             @default(true)
   superStaff          Boolean             @default(false)
   createdAt           DateTime            @default(now())

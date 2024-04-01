@@ -28,7 +28,7 @@ CREATE TABLE "Users" (
     "email" TEXT NOT NULL,
     "emailValidated" BOOLEAN NOT NULL DEFAULT false,
     "image" VARCHAR(255),
-    "phone" TEXT NOT NULL,
+    "phone" VARCHAR(255) NOT NULL,
     "password" VARCHAR(255) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -229,13 +229,7 @@ CREATE TABLE "_ProjectsToStudents" (
 CREATE UNIQUE INDEX "Users_email_key" ON "Users"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Users_phone_key" ON "Users"("phone");
-
--- CreateIndex
 CREATE UNIQUE INDEX "Staffs_userId_key" ON "Staffs"("userId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Staffs_roleId_key" ON "Staffs"("roleId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Students_userId_key" ON "Students"("userId");

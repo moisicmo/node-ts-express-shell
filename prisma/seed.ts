@@ -7,22 +7,19 @@ async function main() {
 
   try {
 
-    const user = await prisma.users.upsert({
-      where: { email: 'moisic.mo@gmail.com' },
-      update: {},
-      create: {
+    const user = await prisma.users.create({
+      data: {
         name: 'Moises',
         lastName: 'Ochoa',
         email: 'moisic.mo@gmail.com',
         phone: '59173735766',
         password: bcryptAdapter.hash('8312915'),
+        emailValidated: true,
       },
     });
 
-    const role = await prisma.roles.upsert({
-      where: { id: 1 },
-      update: {},
-      create: {
+    const role = await prisma.roles.create({
+      data: {
         name: 'administrador',
         permissions: {
           create: [
@@ -39,10 +36,8 @@ async function main() {
       }
     });
 
-    const staff = await prisma.staffs.upsert({
-      where: { userId: user.id, roleId: role.id },
-      update: {},
-      create: {
+    await prisma.staffs.create({
+      data: {
         userId: user.id,
         roleId: role.id,
         superStaff: true
