@@ -61,7 +61,8 @@ model Staffs {
   updatedAt           DateTime            @updatedAt
   user                Users               @relation(fields: [userId], references: [id])
   role                Roles               @relation(fields: [roleId], references: [id])
-  inscriptions        Inscriptions?
+  inscriptions        Inscriptions[]
+  projects            Projects[]
 }
 
 model Students {
@@ -72,7 +73,7 @@ model Students {
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
   user                Users               @relation(fields: [userId], references: [id])
-  inscriptions        Inscriptions?
+  inscriptions        Inscriptions[]
   projects            Projects[]
 }
 
@@ -84,8 +85,8 @@ model Teachers {
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
   user                Users               @relation(fields: [userId], references: [id])
-  parallels           Parallels?
-  projectHistories    ProjectHistories?
+  parallels           Parallels[]
+  projectHistories    ProjectHistories[]
 }
 
 model Subjects {
@@ -96,21 +97,21 @@ model Subjects {
   state               Boolean             @default(true)
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
-  parallels           Parallels?
-  projectHistories    ProjectHistories?
+  parallels           Parallels[]
+  projectHistories    ProjectHistories[]
 }
 
 model Parallels {
   id                  Int                 @id @default(autoincrement())
   name                String              @db.VarChar(255)
-  teacherId           Int                 @unique
-  subjectId           Int                 @unique
+  teacherId           Int                 @db.Integer
+  subjectId           Int                 @db.Integer
   state               Boolean             @default(true)
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
   teacher             Teachers            @relation(fields: [teacherId], references: [id])
   subject             Subjects            @relation(fields: [subjectId], references: [id])
-  projectHistories    ProjectHistories?
+  projectHistories    ProjectHistories[]
 }
 
 model Stages {
@@ -142,7 +143,7 @@ model TypeProjects {
   state               Boolean             @default(true)
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
-  projects            Projects?
+  projects            Projects[]
 }
 
 model Categories {
@@ -151,7 +152,7 @@ model Categories {
   state               Boolean             @default(true)
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
-  projects            Projects?
+  projects            Projects[]
 }
 
 model Seasons {
@@ -164,15 +165,15 @@ model Seasons {
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
   stages              Stages[]
-  inscriptions        Inscriptions?
-  projects            Projects?
+  inscriptions        Inscriptions[]
+  projects            Projects[]
 }
 
 model Inscriptions {
   id                  Int                 @id @default(autoincrement())
-  studentId           Int                 @unique
-  staffId              Int                 @unique
-  seasonId            Int                 @unique
+  studentId           Int                 @db.Integer
+  staffId             Int                 @db.Integer
+  seasonId            Int                 @db.Integer
   total               Int                 @db.Integer
   amountDelivered     Int                 @db.Integer
   returnedAmount      Int                 @db.Integer
@@ -187,9 +188,10 @@ model Inscriptions {
 
 model Projects {
   id                  Int                 @id @default(autoincrement())
-  categoryId          Int                 @unique
-  typeProjectId       Int                 @unique
-  seasonId            Int                 @unique
+  categoryId          Int                 @db.Integer
+  typeProjectId       Int                 @db.Integer
+  staffId             Int                 @db.Integer
+  seasonId            Int                 @db.Integer
   title               String              @db.VarChar(255)
   code                String              @unique
   state               Boolean             @default(true)
@@ -197,16 +199,18 @@ model Projects {
   updatedAt           DateTime            @updatedAt
   category            Categories          @relation(fields: [categoryId], references: [id])
   typeProject         TypeProjects        @relation(fields: [typeProjectId], references: [id])
+  staff               Staffs              @relation(fields: [staffId], references: [id])
   season              Seasons             @relation(fields: [seasonId], references: [id])
   students            Students[]
-  projectHistories    ProjectHistories?
+  projectHistories    ProjectHistories[]
 }
 
 model ProjectHistories {
-  parallelId           Int                @unique
-  projectId            Int                @unique
-  subjectId            Int                @unique
-  teacherId            Int                @unique
+  id                   Int                @id @default(autoincrement())
+  parallelId           Int                @db.Integer
+  projectId            Int                @db.Integer
+  subjectId            Int                @db.Integer
+  teacherId            Int                @db.Integer
   parallel             Parallels          @relation(fields: [parallelId], references: [id])
   project              Projects           @relation(fields: [projectId], references: [id])
   subject              Subjects           @relation(fields: [subjectId], references: [id])

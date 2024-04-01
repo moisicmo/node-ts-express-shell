@@ -12,6 +12,9 @@ import { SeasonRoutes } from './season/routes';
 import { StaffRoutes } from './staff/routes';
 import { StudentRoutes } from './student/routes';
 import { TeacherRoutes } from './teacher/routes';
+import { InscriptionRoutes } from './inscription/routes';
+import { ParallelRoutes } from './parallel/routes';
+import { ProjectRoutes } from './project/routes';
 
 export class AppRoutes {
 
@@ -33,6 +36,9 @@ export class AppRoutes {
     router.use('/api/staff', StaffRoutes.routes);
     router.use('/api/student', StudentRoutes.routes);
     router.use('/api/teacher', TeacherRoutes.routes);
+    router.use('/api/inscription', InscriptionRoutes.routes);
+    router.use('/api/parallel', ParallelRoutes.routes);
+    router.use('/api/project', ProjectRoutes.routes);
 
     return router;
   }

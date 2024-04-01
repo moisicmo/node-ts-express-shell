@@ -11,3 +11,6 @@ export * from './season.service';
 export * from './staff.service';
 export * from './student.service';
 export * from './teacher.service';
+export * from './inscription.service';
+export * from './parallel.service';
+export * from './project.service';

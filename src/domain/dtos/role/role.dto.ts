@@ -15,7 +15,5 @@ export class RoleDto {
     if ( permissions.length == 0 ) return ['Debe ver almenos un permiso'];
 
     return [undefined, new RoleDto(name,permissions)];
-
   }
-
 }

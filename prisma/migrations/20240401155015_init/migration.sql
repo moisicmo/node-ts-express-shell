@@ -183,6 +183,7 @@ CREATE TABLE "Projects" (
     "id" SERIAL NOT NULL,
     "categoryId" INTEGER NOT NULL,
     "typeProjectId" INTEGER NOT NULL,
+    "staffId" INTEGER NOT NULL,
     "seasonId" INTEGER NOT NULL,
     "title" VARCHAR(255) NOT NULL,
     "code" TEXT NOT NULL,
@@ -195,10 +196,13 @@ CREATE TABLE "Projects" (
 
 -- CreateTable
 CREATE TABLE "ProjectHistories" (
+    "id" SERIAL NOT NULL,
     "parallelId" INTEGER NOT NULL,
     "projectId" INTEGER NOT NULL,
     "subjectId" INTEGER NOT NULL,
-    "teacherId" INTEGER NOT NULL
+    "teacherId" INTEGER NOT NULL,
+
+    CONSTRAINT "ProjectHistories_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -244,43 +248,7 @@ CREATE UNIQUE INDEX "Teachers_userId_key" ON "Teachers"("userId");
 CREATE UNIQUE INDEX "Teachers_ci_key" ON "Teachers"("ci");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Parallels_teacherId_key" ON "Parallels"("teacherId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Parallels_subjectId_key" ON "Parallels"("subjectId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Inscriptions_studentId_key" ON "Inscriptions"("studentId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Inscriptions_staffId_key" ON "Inscriptions"("staffId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Inscriptions_seasonId_key" ON "Inscriptions"("seasonId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Projects_categoryId_key" ON "Projects"("categoryId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Projects_typeProjectId_key" ON "Projects"("typeProjectId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Projects_seasonId_key" ON "Projects"("seasonId");
-
--- CreateIndex
 CREATE UNIQUE INDEX "Projects_code_key" ON "Projects"("code");
-
--- CreateIndex
-CREATE UNIQUE INDEX "ProjectHistories_parallelId_key" ON "ProjectHistories"("parallelId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "ProjectHistories_projectId_key" ON "ProjectHistories"("projectId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "ProjectHistories_subjectId_key" ON "ProjectHistories"("subjectId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "ProjectHistories_teacherId_key" ON "ProjectHistories"("teacherId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_PermissionsToRoles_AB_unique" ON "_PermissionsToRoles"("A", "B");
@@ -338,6 +306,9 @@ ALTER TABLE "Projects" ADD CONSTRAINT "Projects_categoryId_fkey" FOREIGN KEY ("c
 
 -- AddForeignKey
 ALTER TABLE "Projects" ADD CONSTRAINT "Projects_typeProjectId_fkey" FOREIGN KEY ("typeProjectId") REFERENCES "TypeProjects"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Projects" ADD CONSTRAINT "Projects_staffId_fkey" FOREIGN KEY ("staffId") REFERENCES "Staffs"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Projects" ADD CONSTRAINT "Projects_seasonId_fkey" FOREIGN KEY ("seasonId") REFERENCES "Seasons"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
